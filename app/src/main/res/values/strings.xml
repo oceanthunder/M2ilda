@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">M2ilda</string>
+    <!-- Placeholder only: the real DJI App Key is entered by the user at runtime. -->
+    <string name="dji_api_key_placeholder">SET_AT_RUNTIME</string>
+</resources>

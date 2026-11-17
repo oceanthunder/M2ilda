@@ -1,0 +1,50 @@
+# ---------------------------------------------------------------------------
+# Secrets — NEVER commit these
+# ---------------------------------------------------------------------------
+# The DJI API key is entered in the app and stored on the controller; no key
+# file is used at build time. This legacy path stays ignored so any old local
+# key file cannot be committed by accident.
+
+dji.properties
+
+# mediamtx self-signed TLS private key / cert
+auto.key
+auto.crt
+*.pem
+
+# Android signing material
+*.jks
+*.keystore
+*.p12
+
+# Machine-specific Android SDK path
+local.properties
+
+# ---------------------------------------------------------------------------
+# Build output
+# ---------------------------------------------------------------------------
+.gradle/
+build/
+app/build/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.pyc
+
+# ---------------------------------------------------------------------------
+# IDE / OS
+# ---------------------------------------------------------------------------
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

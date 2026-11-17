@@ -1,0 +1,105 @@
+plugins {
+    id 'com.android.application'
+}
+
+// The DJI App Key is entered by the user in a popup on first launch and stored
+// on the device; it is never injected at build time. See MainActivity/M2ildaApp.
+
+android {
+    namespace 'com.example.m2ilda'
+
+    // compileSdk 33: AGP 7.4 and its aapt2 cannot parse the SDK 36/37
+    // package, so stay on 33.
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.m2ilda"
+        // minSdk 25 because DJI MSDK requires Android 7.0+ for Mavic 2 Enterprise
+        minSdk 25
+        // targetSdk 24+: the RM500 package manager rejects apps targeting <24.
+        // Runtime permissions are granted implicitly by ground_station.py
+        // via `adb shell pm grant` (kiosk-style, no user prompts).
+        targetSdk 24
+        versionCode 3
+        versionName "1.0"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/*.RSA'
+        exclude 'META-INF/*.SF'
+        exclude 'META-INF/*.DSA'
+
+        // The DJI AAR and dji-sdk-provided jar both ship this file; keep one.
+        pickFirst 'dji/thirdparty/okhttp3/internal/publicsuffix/publicsuffixes.gz'
+
+        // DJI prebuilt .so files are not 16 KB aligned; load them the legacy way
+        // (extract to disk at install) instead of mmap-ing uncompressed entries.
+        jniLibs.useLegacyPackaging true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    // DJI Mobile SDK - ULTIMATE license covers Mavic 2 Enterprise.
+    // The dji-sdk AAR provides the native .so libraries and resources, while
+    // the actual Java classes ship in dji-sdk-provided. DJI's shipped bytecode
+    // has a bogus leading `return` in its constructors that Android's ART
+    // verifier rejects ("Constructor returning without calling superclass").
+    // We therefore use a locally patched copy of that jar (constructors fixed)
+    // rather than the raw Maven artifact, so the APK passes verification.
+    implementation('com.dji:dji-sdk:4.16.4', {
+        exclude module: 'library-anti-distortion'
+        exclude module: 'flight-bridge'
+    })
+    implementation files('libs/dji-sdk-provided-patched.jar')
+
+    // DJI's FinalHttp (dji.thirdparty.afinal) uses org.apache.http classes that
+    // Android 6+ no longer provides on the platform. Package Apache HttpComponents.
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents:httpmime:4.5.6'
+
+    // AndroidX dependencies required by DJI sample code
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    implementation 'com.google.android.material:material:1.9.0'
+}
+
+// Resolve the Kotlin stdlib version clash caused by the DJI SDK pulling in
+// an old kotlin-stdlib-jdk7/jdk8 (1.6.0) alongside newer stdlib.
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.10'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10'
+    }
+}

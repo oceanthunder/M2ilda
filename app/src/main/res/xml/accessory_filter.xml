@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessory-filter>
+    <usb-accessory
+        model="Mavic 2 Enterprise"
+        manufacturer="SZ DJI TECHNOLOGY CO., LTD"
+        version="1.0" />
+    <usb-accessory manufacturer="SZ DJI TECHNOLOGY CO., LTD" />
+</accessory-filter>

@@ -1,0 +1,14 @@
+# DJI SDK ProGuard rules
+-keep class dji.** { *; }
+-keep class com.dji.** { *; }
+-keep class androidx.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class rx.** { *; }
+-dontwarn dji.**
+-dontwarn com.dji.**
+-dontwarn rx.**
+-keep class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+-keep class java.time.** { *; }
+-dontwarn java.time.**
