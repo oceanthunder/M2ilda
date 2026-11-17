@@ -5,6 +5,8 @@ aircraft through the DJI Mobile SDK. Meanwhile, a python server on a laptop expo
 browser dashboard and a small TCP/WebSocket API for command control, telemetry,
 live video, and waypoint missions.
 
+[![Download APK](https://img.shields.io/badge/Download-APK-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/oceanthunder/M2ilda/releases/latest/download/M2ilda-latest.apk)
+
 Create your own API key at [developer.dji.com](https://developer.dji.com/) and enter it in the app on first launch.
 
 ## Steps
